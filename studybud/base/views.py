@@ -14,27 +14,30 @@ from .forms import RoomForm
 #     {'id':3, 'name':'Frontend developers'},
 # ]
 
+def logoutUser(request):
+    logout(request)
+    return redirect("home")
 
 def loginPage(request):
     username = ""
     password = ""
     user = None
     if request.method == 'POST':
-        username = request.POST.get('Username')
-        password = request.POST.get('Password')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
         try:
             user = User.objects.get(username=username)
         except:
             messages.error(request, 'User does not exist')
 
-    user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username, password=password)
 
-    if user is not None:
-        login(request, user)
-        return redirect("home")
-    else:
-        messages.error(request, "Username OR password does not exist")
+        if user is not None:
+            login(request, user)
+            return redirect("home")
+        else:
+            messages.error(request, "Username OR password does not exist")
 
 
     context = {"user": user}
